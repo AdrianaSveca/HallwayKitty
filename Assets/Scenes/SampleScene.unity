@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 159900092}
   m_Layer: 0
   m_Name: Cat
-  m_TagString: Untagged
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -505,7 +505,7 @@ GameObject:
   - component: {fileID: 1194118666}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -826,8 +826,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9589e651c622ccb4497c510f909303be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 100
-  playerCamera: {fileID: 330585543}
+  player: {fileID: 1919674376}
+  cat: {fileID: 1194118664}
 --- !u!4 &1919674378
 Transform:
   m_ObjectHideFlags: 0
@@ -836,14 +836,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1919674376}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.01248098, y: -0.65667564, z: 0.017969953, w: -0.75385576}
-  m_LocalPosition: {x: 48, y: 62.1, z: 170.6}
+  m_LocalRotation: {x: 0.011858489, y: 0.7252712, z: -0.006791853, w: 0.68832767}
+  m_LocalPosition: {x: 46.96, y: 57.8, z: 166.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 2.431, y: 82.105, z: -0.614}
+  m_LocalEulerAnglesHint: {x: 1.5, y: 93, z: 0.45}
 --- !u!143 &1919674379
 CharacterController:
   m_ObjectHideFlags: 0
@@ -928,6 +928,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 2d9917861da72fa4a897939972378989, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3852341972610935857, guid: 2d9917861da72fa4a897939972378989, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d9917861da72fa4a897939972378989, type: 3}
       propertyPath: m_Name

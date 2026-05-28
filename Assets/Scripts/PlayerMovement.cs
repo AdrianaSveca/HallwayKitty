@@ -8,6 +8,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 initialPosition = new Vector3(47f, 57.8f, 160f);
     private Quaternion initialRotation = Quaternion.Euler(1.5f, 93f, 0.45f);
 
+    public GameObject cat;
+    private RaycastHit hit;
+
     private float leanTimer = 4f;
 
 
@@ -20,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        Vector3 direction = (cat.transform.position - player.transform.position).normalized;
+        Vector3 moveDirection = (player.transform.position - cat.transform.position).normalized;
+
         if (Input.GetMouseButton(0) && leanTimer > 0f)
         {
             leanTimer -= Time.deltaTime;
@@ -40,6 +46,23 @@ public class PlayerMovement : MonoBehaviour
             }
 
             
+        }
+        
+        if (Physics.Raycast(player.transform.position, direction, out hit, 400f))
+        {
+            if (hit.collider.gameObject == cat)
+            {
+                Debug.Log("Cat seen!");
+                Debug.DrawLine(player.transform.position, hit.point, Color.green);
+            }
+            else
+            {
+                Debug.Log("Wall/object blocking cat.");
+                Debug.DrawLine(player.transform.position, hit.point, Color.red);
+
+                cat.transform.position += moveDirection * Time.deltaTime * 2f;
+
+            }
         }
     }
 }
