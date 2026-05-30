@@ -158,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(player.transform.position, direction, out hit, 400f))
         {
             
-            if (hit.collider.gameObject == cat)
+            if (hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject == cat)
             {
                 catMovement.isSeen = true;
                 Debug.Log("Cat seen!");
