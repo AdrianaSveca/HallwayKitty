@@ -39,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     private float normalFOV;
     public float zoomSpeed = 5f;
 
+    public CatMovement catMovement;
+
     
 
     void Start()
@@ -158,15 +160,17 @@ public class PlayerMovement : MonoBehaviour
             
             if (hit.collider.gameObject == cat)
             {
+                catMovement.isSeen = true;
                 Debug.Log("Cat seen!");
                 Debug.DrawLine(player.transform.position, hit.point, Color.green);
             }
             else
             {
+                catMovement.isSeen = false;
                 Debug.Log("Wall/object blocking cat.");
                 Debug.DrawLine(player.transform.position, hit.point, Color.red);
 
-                cat.transform.position += moveDirection * Time.deltaTime * 5f;
+                cat.transform.position += moveDirection * Time.deltaTime * 2f;
 
             }
         }
