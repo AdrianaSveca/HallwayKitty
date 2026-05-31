@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
        
         Vector3 direction = (cat.transform.position - player.transform.position).normalized;
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
-        Vector3 moveDirection = (player.transform.position - cat.transform.position).normalized;
+        Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position - cat.transform.position).normalized;
         //move direction for the cat to move towards the player
 
         //if statement to check if the player is holding down the left mouse button and if the lean timer is greater than 0, 

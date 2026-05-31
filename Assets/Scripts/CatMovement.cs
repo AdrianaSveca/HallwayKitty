@@ -3,10 +3,10 @@ using UnityEngine;
 public class CatMovement : MonoBehaviour
 {
 
-    [SerializeField] private Transform[] teleportPoints; // Array of teleport points for the cat to move between
+    [SerializeField] public Transform[] teleportPoints; // Array of teleport points for the cat to move between
 
     public bool isSeen;
-    private int currentPointIndex = 0;
+    public int currentPointIndex = 0;
     private float teleportTimer;
 
     private float gameTimer = 999f; // Timer for the entire game, set to 60 seconds
