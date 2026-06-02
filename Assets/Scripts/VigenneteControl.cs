@@ -33,7 +33,7 @@ public class VigenneteControl : MonoBehaviour
             //get vigenette component and set its intensity to 1.5, 
             // removing the vignette effect when the player reaches the cat
             vignette.color.value= Color.red;
-            vignette.intensity.value = 0.3f;
+            vignette.intensity.value = 0.2f;
             
         }
         else if (catMovement.currentPointIndex == 7)
@@ -41,7 +41,7 @@ public class VigenneteControl : MonoBehaviour
             //get vigenette component and set its intensity to 0.5, 
             // creating a vignette effect when the player reaches the cat
             vignette.color.value= Color.red;
-            vignette.intensity.value = 0.7f;
+            vignette.intensity.value = 0.4f;
             
         }
         

@@ -41,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     public CatMovement catMovement;
 
+    public AudioSource movementSound;
+
     
 
     void Start()
@@ -73,6 +75,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetMouseButton(0) && leanTimer > 0f)
         {
+            if (!movementSound.isPlaying)
+            {
+                movementSound.volume = 0.05f;
+                movementSound.Play();
+            }
+            
             leanTimer -= Time.deltaTime;
             player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, Time.deltaTime * 5f);
             player.transform.rotation = Quaternion.Lerp(player.transform.rotation, targetRotation, Time.deltaTime * 5f);
@@ -128,6 +136,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            
             shakeAmount = 0f;
             playerCamera.transform.localPosition = cameraBasePosition;
             player.transform.position = Vector3.Lerp(player.transform.position, initialPosition, Time.deltaTime * 5f);
