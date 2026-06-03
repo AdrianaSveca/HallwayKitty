@@ -8,6 +8,7 @@ public class CatMovement : MonoBehaviour
     public bool isSeen;
     public int currentPointIndex = 0;
     private float teleportTimer;
+    public GameObject catFrame;
 
     private float gameTimer = 999f; // Timer for the entire game, set to 60 seconds
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,6 +16,7 @@ public class CatMovement : MonoBehaviour
     private bool gameEnded = false;
     void Start()
     {
+        catFrame.SetActive(false);
         teleportTimer = Random.Range(4f, 8f);
     }
 
@@ -67,6 +69,7 @@ public class CatMovement : MonoBehaviour
                     case 4:
                         Debug.Log("Teleporting to point 5");
                         transform.localScale += new Vector3(1f, 1f, 1f);
+                        catFrame.SetActive(true);
                         break;
 
                     case 5:
