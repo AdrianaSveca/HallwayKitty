@@ -1,9 +1,10 @@
-
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public GameObject GameOverPanel;
     public GameObject player;
     //game object player <- the player character in the scene, used for movement and rotation
     public GameObject playerCamera;
@@ -66,7 +67,16 @@ public class PlayerMovement : MonoBehaviour
        
         Vector3 direction = (cat.transform.position - player.transform.position).normalized;
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
-        Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position - cat.transform.position).normalized;
+       if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
+       {
+        GameOverPanel.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        return;
+        
+    
+    }
+    Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position- cat.transform.position).normalized;
         //move direction for the cat to move towards the player
 
         //if statement to check if the player is holding down the left mouse button and if the lean timer is greater than 0, 
@@ -183,5 +193,10 @@ public class PlayerMovement : MonoBehaviour
 
             }
         }
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
     }
 }
