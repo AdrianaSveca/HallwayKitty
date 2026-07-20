@@ -44,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
 
     public AudioSource movementSound;
 
+    public Transform chaseStartPoint;
+
     
 
     void Start()
@@ -69,9 +71,9 @@ public class PlayerMovement : MonoBehaviour
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
        if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
        {
-        GameOverPanel.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        player.transform.position = chaseStartPoint.position;
+        player.transform.rotation = chaseStartPoint.rotation;
+        Debug.Log("Player has been moved to the chase start point.");
         return;
         
     
