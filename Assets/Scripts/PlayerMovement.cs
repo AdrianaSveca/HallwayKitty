@@ -46,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform chaseStartPoint;
 
+    private bool chaseMode = false;
+
     
 
     void Start()
@@ -71,13 +73,14 @@ public class PlayerMovement : MonoBehaviour
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
        if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
        {
-        player.transform.position = chaseStartPoint.position;
-        player.transform.rotation = chaseStartPoint.rotation;
-        Debug.Log("Player has been moved to the chase start point.");
+        ChaseStart();
         return;
-        
-    
-    }
+        }
+        if (chaseMode)
+        {
+            player.transform.position = Vector3.forward * Time.deltaTime * 5f + player.transform.position;
+            return;
+        }
     Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position- cat.transform.position).normalized;
         //move direction for the cat to move towards the player
 
@@ -200,5 +203,13 @@ public class PlayerMovement : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
+    }
+    public void ChaseStart()
+    {
+        player.transform.position = chaseStartPoint.position;
+        player.transform.rotation = chaseStartPoint.rotation;
+        Debug.Log("Player has been moved to the chase start point.");
+        chaseMode = true;
+        
     }
 }
