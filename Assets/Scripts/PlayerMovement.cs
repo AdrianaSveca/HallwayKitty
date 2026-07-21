@@ -71,16 +71,19 @@ public class PlayerMovement : MonoBehaviour
        
         Vector3 direction = (cat.transform.position - player.transform.position).normalized;
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
-       if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
-       {
-        ChaseStart();
-        return;
-        }
-        if (chaseMode)
-        {
-            player.transform.position = Vector3.forward * Time.deltaTime * 5f + player.transform.position;
-            return;
-        }
+       if (chaseMode)
+{
+    player.transform.position +=
+        player.transform.forward * Time.deltaTime * 20f;
+
+    return;
+}
+
+if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
+{
+    ChaseStart();
+    return;
+}
     Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position- cat.transform.position).normalized;
         //move direction for the cat to move towards the player
 

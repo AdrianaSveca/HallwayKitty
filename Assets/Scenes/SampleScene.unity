@@ -4724,6 +4724,7 @@ MonoBehaviour:
   zoomSpeed: 5
   catMovement: {fileID: 159900093}
   movementSound: {fileID: 554283211}
+  chaseStartPoint: {fileID: 1462506857}
 --- !u!4 &1919674378
 Transform:
   m_ObjectHideFlags: 0
