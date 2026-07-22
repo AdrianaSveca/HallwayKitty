@@ -74,7 +74,11 @@ public class PlayerMovement : MonoBehaviour
        if (chaseMode)
 {
     player.transform.position +=
-        player.transform.forward * Time.deltaTime * 20f;
+        player.transform.forward * Time.deltaTime * 35f;
+
+        float horixontalInput = Input.GetAxis("Horizontal");
+        player.transform.position +=
+        player.transform.right * horixontalInput * Time.deltaTime * 50f;
 
     return;
 }
@@ -82,6 +86,13 @@ public class PlayerMovement : MonoBehaviour
 if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
 {
     ChaseStart();
+
+
+if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
+{
+    ChaseStart();
+    return;
+}
     return;
 }
     Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position- cat.transform.position).normalized;
