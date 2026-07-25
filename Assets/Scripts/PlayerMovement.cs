@@ -47,11 +47,14 @@ public class PlayerMovement : MonoBehaviour
     public Transform chaseStartPoint;
 
     private bool chaseMode = false;
+    private CharacterController controller;
+
 
     
 
     void Start()
     {
+        controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         player.transform.rotation = initialRotation;
         player.transform.position = initialPosition;
@@ -73,28 +76,22 @@ public class PlayerMovement : MonoBehaviour
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
        if (chaseMode)
 {
-    player.transform.position +=
-        player.transform.forward * Time.deltaTime * 35f;
+    float horizontalInput = Input.GetAxis("Horizontal");
 
-        float horixontalInput = Input.GetAxis("Horizontal");
-        player.transform.position +=
-        player.transform.right * horixontalInput * Time.deltaTime * 50f;
+Vector3 movement =
+    player.transform.forward * 35f +
+    player.transform.right * horizontalInput * 50f;
 
+controller.Move(movement * Time.deltaTime);
     return;
 }
 
-if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
-{
-    ChaseStart();
-
-
-if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
+if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
 {
     ChaseStart();
     return;
 }
-    return;
-}
+    
     Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position- cat.transform.position).normalized;
         //move direction for the cat to move towards the player
 
@@ -220,10 +217,25 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
     }
     public void ChaseStart()
     {
-        player.transform.position = chaseStartPoint.position;
-        player.transform.rotation = chaseStartPoint.rotation;
-        Debug.Log("Player has been moved to the chase start point.");
-        chaseMode = true;
+        controller.enabled = false;
+
+    transform.position = chaseStartPoint.position;
+    transform.rotation = chaseStartPoint.rotation;
+
+    controller.enabled = true;
+
+    chaseMode = true;
+
+    Debug.Log("CHASE STARTED");
         
     }
+    void OnControllerColliderHit(ControllerColliderHit hit)
+{
+    Debug.Log("Player hit: " + hit.gameObject.name);
+
+    if (hit.gameObject.CompareTag("Obstacle"))
+    {
+        RestartGame();
+    }
+}
 }
