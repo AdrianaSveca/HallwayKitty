@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     private Quaternion cameraBaseRotation;
     public GameObject cat;
     //game object of the cat, used to determine the direction to the cat and whether the player can see the cat or not
+    public Collider catCollider;
+    //collider of the cat, used to determine if the player can see the cat or
     private RaycastHit hit;
     //a raycast hit variable used to store the result of the raycast when checking if the player can see the cat, used to determine if the cat is visible or if there is an obstacle in the way
 
@@ -50,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
 
 
-    
+
 
     void Start()
     {
@@ -66,34 +68,31 @@ public class PlayerMovement : MonoBehaviour
         cameraBaseRotation = playerCamera.transform.localRotation;
         normalFOV = playerCamera.GetComponent<Camera>().fieldOfView;
         zoomFOV = normalFOV - 15f;
-        
+
     }
 
     void Update()
     {
-       
-        Vector3 direction = (cat.transform.position - player.transform.position).normalized;
+
+        Vector3 direction = (catCollider.bounds.center - playerCamera.transform.position).normalized;
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
-       if (chaseMode)
-{
-    float horizontalInput = Input.GetAxis("Horizontal");
+        if (chaseMode)
+        {
+            float horizontalInput = Input.GetAxis("Horizontal");
 
-Vector3 movement =
-    player.transform.forward * 35f +
-    player.transform.right * horizontalInput * 50f;
+            Vector3 movement =
+                player.transform.forward * 35f +
+                player.transform.right * horizontalInput * 50f;
 
-controller.Move(movement * Time.deltaTime);
-    return;
-}
+            controller.Move(movement * Time.deltaTime);
+            return;
+        }
 
-if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
-{
-    ChaseStart();
-    return;
-}
-    
-    Vector3 moveDirection = (catMovement.teleportPoints[catMovement.currentPointIndex].position- cat.transform.position).normalized;
-        //move direction for the cat to move towards the player
+        if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length - 1)
+        {
+            ChaseStart();
+            return;
+        }
 
         //if statement to check if the player is holding down the left mouse button and if the lean timer is greater than 0, 
         // if true the player will lean towards the target position and rotation, and the shake amount will increase as the player leans more, 
@@ -106,7 +105,7 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
                 movementSound.volume = 0.05f;
                 movementSound.Play();
             }
-            
+
             leanTimer -= Time.deltaTime;
             player.transform.position = Vector3.Lerp(player.transform.position, targetPosition, Time.deltaTime * 5f);
             player.transform.rotation = Quaternion.Lerp(player.transform.rotation, targetRotation, Time.deltaTime * 5f);
@@ -128,11 +127,11 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
             if (Input.GetMouseButton(1))
             {
                 targetFOV = zoomFOV;
-               
+
             }
             else
             {
-               targetFOV = normalFOV;
+                targetFOV = normalFOV;
             }
             playerCamera.GetComponent<Camera>().fieldOfView = Mathf.Lerp(playerCamera.GetComponent<Camera>().fieldOfView, targetFOV, Time.deltaTime * zoomSpeed);
 
@@ -141,14 +140,14 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
             {
                 shakeAmount = 0.1f;
             }
-            else if(leanTimer < 2f)
+            else if (leanTimer < 2f)
             {
                 shakeAmount = 0.05f;
-                
+
             }
             if (shakeAmount > 0f)
             {
-                Vector3 shakeOffset = new Vector3 (Random.Range(-shakeAmount, shakeAmount), 0f, 0f);
+                Vector3 shakeOffset = new Vector3(Random.Range(-shakeAmount, shakeAmount), 0f, 0f);
                 playerCamera.transform.localPosition = cameraBasePosition + shakeOffset;
                 //the player camera's local position is set to the base position plus a random shake offset, creating a shaking effect when leaning
             }
@@ -158,29 +157,29 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
                 shakeAmount = 0f;
                 //if the shake amount is 0 or less, the player camera's local position is reset to the base position and the shake amount is set to 0, ensuring the camera does not shake when not leaning
             }
-            
+
         }
         else
         {
-            
+
             shakeAmount = 0f;
             playerCamera.transform.localPosition = cameraBasePosition;
             player.transform.position = Vector3.Lerp(player.transform.position, initialPosition, Time.deltaTime * 5f);
             player.transform.rotation = Quaternion.Lerp(player.transform.rotation, initialRotation, Time.deltaTime * 5f);
             //if the player is not holding down the left mouse button or the lean timer is 0 or less, the player will return to the initial position and rotation, and the shake amount will reset
-            
+
             xRotation = Mathf.Lerp(xRotation, 0f, Time.deltaTime * 5f);
             yRotation = Mathf.Lerp(yRotation, 0f, Time.deltaTime * 5f);
-            
+
             playerCamera.transform.localRotation = cameraBaseRotation * Quaternion.Euler(-yRotation, xRotation, 0f);
-            
-            if(Vector3.Distance(player.transform.position, initialPosition) < 0.1f)
+
+            if (Vector3.Distance(player.transform.position, initialPosition) < 0.1f)
             {
                 leanTimer = Random.Range(4f, 8f);
                 //if the player is close enough to the initial position, the lean timer will reset to a random value between 4 and 8 seconds, allowing the player to lean again after returning to the initial position
             }
 
-            
+
         }
 
 
@@ -189,25 +188,49 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
         //if raycast hits an object within 400 units in the direction of the cat, it will check if the hit object is the cat, if true it will log "Cat seen!" and draw a green line from the player to the hit point,
         // if false it will log "Wall/object blocking cat." and draw a red line from the player to the hit point, and move the cat towards the player using the move direction vector, creating a mechanic where the cat 
         // will try to get closer to the player if it is blocked by an obstacle
-        
-        if (Physics.Raycast(player.transform.position, direction, out hit, 400f))
+
+        if (Physics.Raycast(
+    playerCamera.transform.position,
+    direction,
+    out hit,
+    400f
+))
         {
-            
-            if (hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject == cat)
+            if (hit.collider.transform.IsChildOf(cat.transform))
             {
                 catMovement.isSeen = true;
+
                 Debug.Log("Cat seen!");
-                Debug.DrawLine(player.transform.position, hit.point, Color.green);
+                Debug.DrawLine(
+                    playerCamera.transform.position,
+                    hit.point,
+                    Color.green
+                );
             }
             else
             {
                 catMovement.isSeen = false;
-                Debug.Log("Wall/object blocking cat.");
-                Debug.DrawLine(player.transform.position, hit.point, Color.red);
 
-                cat.transform.position += moveDirection * Time.deltaTime * 2f;
+                Debug.Log("Raycast hit: " + hit.collider.gameObject.name);
+                Debug.DrawLine(
+                    playerCamera.transform.position,
+                    hit.point,
+                    Color.red
+                );
 
+                
             }
+        }
+        else
+        {
+            catMovement.isSeen = false;
+            Debug.Log("Raycast hit nothing.");
+
+            Debug.DrawRay(
+                playerCamera.transform.position,
+                direction * 400f,
+                Color.red
+            );
         }
     }
     public void RestartGame()
@@ -219,23 +242,23 @@ if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length-1)
     {
         controller.enabled = false;
 
-    transform.position = chaseStartPoint.position;
-    transform.rotation = chaseStartPoint.rotation;
+        transform.position = chaseStartPoint.position;
+        transform.rotation = chaseStartPoint.rotation;
 
-    controller.enabled = true;
+        controller.enabled = true;
 
-    chaseMode = true;
+        chaseMode = true;
 
-    Debug.Log("CHASE STARTED");
-        
+        Debug.Log("CHASE STARTED");
+
     }
     void OnControllerColliderHit(ControllerColliderHit hit)
-{
-    Debug.Log("Player hit: " + hit.gameObject.name);
-
-    if (hit.gameObject.CompareTag("Obstacle"))
     {
-        RestartGame();
+        Debug.Log("Player hit: " + hit.gameObject.name);
+
+        if (hit.gameObject.CompareTag("Obstacle"))
+        {
+            RestartGame();
+        }
     }
-}
 }
