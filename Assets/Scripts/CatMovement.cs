@@ -14,10 +14,17 @@ public class CatMovement : MonoBehaviour
     private float gameTimer = 999f;
     private bool gameEnded = false;
 
+    public GameObject normalCat;
+    public GameObject corruptedCat;
+    public GameObject monsterCat;
+
     void Start()
     {
         catFrame.SetActive(false);
         ResetTeleportTimer();
+        normalCat.SetActive(true);
+        corruptedCat.SetActive(false);
+        monsterCat.SetActive(false);
     }
 
     void Update()
@@ -82,6 +89,16 @@ public class CatMovement : MonoBehaviour
         Debug.Log(
             "Reached point " + (currentPointIndex + 1)
         );
+        if (currentPointIndex == 1)
+        {
+            normalCat.SetActive(false);
+            corruptedCat.SetActive(true);
+        }
+        else if (currentPointIndex == 3)
+        {
+            corruptedCat.SetActive(false);
+            monsterCat.SetActive(true);
+        }
 
         // Reveal the picture-frame cat at point 5.
         if (currentPointIndex == 4)

@@ -85,7 +85,19 @@ public class PlayerMovement : MonoBehaviour
                 player.transform.right * horizontalInput * 50f;
 
             controller.Move(movement * Time.deltaTime);
+            float bobSpeed = 10f;
+            float bobAmount = 1f;
+
+            float bob = Mathf.Sin(Time.time * bobSpeed) * bobAmount;
+
+            playerCamera.transform.localPosition =
+                cameraBasePosition + new Vector3(0f, bob, 0f);
+            float sway = Mathf.Sin(Time.time * bobSpeed * 0.5f) * 0.04f;
+
+            playerCamera.transform.localPosition =
+                cameraBasePosition + new Vector3(sway, bob, 0f);
             return;
+
         }
 
         if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length - 1)
@@ -218,7 +230,7 @@ public class PlayerMovement : MonoBehaviour
                     Color.red
                 );
 
-                
+
             }
         }
         else
