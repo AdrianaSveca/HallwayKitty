@@ -50,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool chaseMode = false;
     private CharacterController controller;
+    public GameObject jumpscareCat;
+    public AudioSource jumpscareSound;
 
 
 
@@ -68,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         cameraBaseRotation = playerCamera.transform.localRotation;
         normalFOV = playerCamera.GetComponent<Camera>().fieldOfView;
         zoomFOV = normalFOV - 15f;
+        jumpscareCat.SetActive(false);
 
     }
 
@@ -270,7 +273,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (hit.gameObject.CompareTag("Obstacle"))
         {
-            RestartGame();
+            Jumpscare();
         }
+    }
+    public void Jumpscare()
+    {
+        chaseMode = false;
+
+        jumpscareCat.SetActive(true);
+        jumpscareSound.Play();
+
+        Invoke(nameof(RestartGame), 2.5f);
     }
 }
