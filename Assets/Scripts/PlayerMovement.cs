@@ -1,9 +1,11 @@
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public GameObject runText;
     public GameObject GameOverPanel;
     public GameObject player;
     //game object player <- the player character in the scene, used for movement and rotation
@@ -49,9 +51,14 @@ public class PlayerMovement : MonoBehaviour
     public Transform chaseStartPoint;
 
     private bool chaseMode = false;
+
+    private bool isJumpScaring = false;
+
     private CharacterController controller;
     public GameObject jumpscareCat;
     public AudioSource jumpscareSound;
+    public AudioSource chaseMusic;
+    public AudioSource runningSound;
 
 
 
@@ -76,6 +83,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (isJumpScaring)
+        {
+            return;
+        }
 
         Vector3 direction = (catCollider.bounds.center - playerCamera.transform.position).normalized;
         //direction vector from the player to the cat, used for raycasting to check if the player can see the cat 
@@ -84,8 +95,8 @@ public class PlayerMovement : MonoBehaviour
             float horizontalInput = Input.GetAxis("Horizontal");
 
             Vector3 movement =
-                player.transform.forward * 35f +
-                player.transform.right * horizontalInput * 50f;
+                player.transform.forward * 50f +
+                player.transform.right * horizontalInput * 35f;
 
             controller.Move(movement * Time.deltaTime);
             float bobSpeed = 10f;
@@ -103,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length - 1)
+        if (catMovement.currentPointIndex >= catMovement.teleportPoints.Length)
         {
             ChaseStart();
             return;
@@ -263,8 +274,11 @@ public class PlayerMovement : MonoBehaviour
         controller.enabled = true;
 
         chaseMode = true;
+        runText.SetActive(true);
+        Invoke(nameof(HideRunText), 1f);
 
-        Debug.Log("CHASE STARTED");
+        chaseMusic.Play();
+        runningSound.Play();
 
     }
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -278,11 +292,43 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Jumpscare()
     {
+        isJumpScaring = true;
         chaseMode = false;
+
+        controller.enabled = false;
 
         jumpscareCat.SetActive(true);
         jumpscareSound.Play();
-
+        StartCoroutine(JumpscareShake());
         Invoke(nameof(RestartGame), 2.5f);
+
+
+    }
+    IEnumerator JumpscareShake()
+    {
+        Vector3 originalPosition = playerCamera.transform.localPosition;
+
+        float duration = 2.5f;
+        float strength = 1.4f;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            float x = Random.Range(-strength, strength);
+            float y = Random.Range(-strength, strength);
+
+            playerCamera.transform.localPosition =
+                originalPosition + new Vector3(x, y, 0f);
+
+            timer += Time.deltaTime;
+
+            yield return null;
+        }
+
+        playerCamera.transform.localPosition = originalPosition;
+    }
+    public void HideRunText()
+    {
+        runText.SetActive(false);
     }
 }
