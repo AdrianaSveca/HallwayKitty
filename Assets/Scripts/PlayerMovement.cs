@@ -237,26 +237,12 @@ public class PlayerMovement : MonoBehaviour
             {
                 catMovement.isSeen = false;
 
-                Debug.Log("Raycast hit: " + hit.collider.gameObject.name);
-                Debug.DrawLine(
-                    playerCamera.transform.position,
-                    hit.point,
-                    Color.red
-                );
-
 
             }
         }
         else
         {
             catMovement.isSeen = false;
-            Debug.Log("Raycast hit nothing.");
-
-            Debug.DrawRay(
-                playerCamera.transform.position,
-                direction * 400f,
-                Color.red
-            );
         }
     }
     public void RestartGame()
@@ -283,7 +269,6 @@ public class PlayerMovement : MonoBehaviour
     }
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log("Player hit: " + hit.gameObject.name);
 
         if (hit.gameObject.CompareTag("Obstacle"))
         {
